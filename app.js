@@ -1,47 +1,18 @@
-const http = require('http');
-const fs = require('fs');
+const bodyParser = require('body-parser');
 
-const server = http.createServer((req, res) => {
-    const url = req.url;
-    if (url === '/') {
-        res.setHeader('Content-Type', 'text/html');
-        res.write('<html>');
-        res.write('<head>');
-        res.write('</head>');
-        res.write('<body>');
-        res.write("<h1 style='color:blue;'>Route is / !!</h1>");
-        res.write('<form action="/message" method="POST"><input type="text" name="message"><button type="submit">Submit</button')
-        res.write('</body>');
-        res.write('</html>');
-        res.end();
-    } else if (req.url === "/message" && req.method === "POST") {
-        const body = [];
-        req.on('data', (chunk) => {
-            console.log(chunk);
-            body.push(chunk);
-        });
-        req.on('end', () => {
-            const parsedBody = Buffer.concat(body).toString();
-            const message = parsedBody.split('=')[1];
-            console.log(message);
-            fs.writeFileSync('message.txt', message);
-            res.writeHead(302, {
-                Location: '/'
-            });
-            res.end();
-        });
-    } else {
-        res.setHeader('Content-Type', 'text/html');
-        res.write('<html>');
-        res.write('<head>');
-        res.write('</head>');
-        res.write('<body>');
-        res.write(`<h1 style="color:blue;">Route is ${url} !!</h1>`);
-        res.write('</body>');
-        res.write('</html>');
-        res.end();
-    }
-    
+const express = require('express');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(shopRoutes);
+app.use(adminRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).send('<h1>Page not found!</h1>');
 });
 
-server.listen(3000);
+app.listen(3000);
