@@ -1,0 +1,7 @@
+include includes/header.pug
+main
+    form.product-form(action="/admin/add-product", method="POST")
+        .form-control
+            label.title Title
+            input(type="text", name="title", id="title")
+        button.btn(type="submit") Add Product
