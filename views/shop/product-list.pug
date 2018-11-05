@@ -1,5 +1,6 @@
-include includes/header.pug
-main
+extends ../layouts/main.pug
+
+block content
     if products.length > 0
         .grid
             each product in products

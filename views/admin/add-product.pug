@@ -1,5 +1,6 @@
-include includes/header.pug
-main
+extends ../layouts/main.pug
+
+block content
     form.product-form(action="/admin/add-product", method="POST")
         .form-control
             label.title Title
